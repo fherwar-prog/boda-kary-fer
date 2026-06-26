@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>💍 Boda Kary & Fer — Acceso</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@400;500;600&display=swap');
+
+    :root {
+      --gold: #B8966E;
+      --gold-light: #D4B48A;
+      --dark: #1A1410;
+      --cream: #FAF7F2;
+      --green: #2D6A4F;
+      --red: #8B2020;
+      --gray: #6B6560;
+      --border: #E8E0D5;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cream);
+      color: var(--dark);
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--dark);
+      padding: 18px 20px 14px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      color: var(--gold);
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    header p {
+      color: #9A8E84;
+      font-size: 0.72rem;
+      margin-top: 2px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .container { max-width: 480px; margin: 0 auto; padding: 24px 16px; }
+
+    /* --- SEARCH BOX --- */
+    .search-section {
+      background: white;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .search-section label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 8px;
+    }
+
+    .search-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .search-row input {
+      flex: 1;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      background: var(--cream);
+      color: var(--dark);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-row input:focus { border-color: var(--gold); }
+
+    .search-row button {
+      padding: 12px 18px;
+      background: var(--dark);
+      color: var(--gold);
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    /* --- GUEST CARD --- */
+    .guest-card {
+      background: white;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      display: none;
+    }
+
+    .guest-card.visible { display: block; }
+
+    .card-header {
+      background: var(--dark);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .avatar {
+      width: 52px;
+      height: 52px;
+      background: var(--gold);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      color: var(--dark);
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .card-header-info h2 {
+      font-family: 'Cormorant Garamond', serif;
+      color: white;
+      font-size: 1.3rem;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .card-header-info span {
+      font-size: 0.72rem;
+      color: var(--gold-light);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .status-badge {
+      margin-left: auto;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
+    .status-CONFIRMADO { background: #1A3D2B; color: #5CCC8A; }
+    .status-PENDIENTE  { background: #3D2E0A; color: #D4A844; }
+    .status-DECLINO    { background: #3D0A0A; color: #CC5C5C; }
+    .status-POR-WHATS  { background: #0A2A3D; color: #5CB8CC; }
+
+    .card-body { padding: 20px; display: grid; gap: 14px; }
+
+    .info-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      background: var(--cream);
+      border-radius: 8px;
+    }
+
+    .info-icon { font-size: 1.4rem; flex-shrink: 0; }
+
+    .info-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--gray);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .info-value {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--dark);
+      margin-top: 1px;
+    }
+
+    .tickets-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--gold);
+      line-height: 1;
+    }
+
+    /* --- CHECKIN SECTION --- */
+    .checkin-section { padding: 0 20px 20px; }
+
+    .checkin-btn {
+      width: 100%;
+      padding: 16px;
+      background: var(--green);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: opacity 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .checkin-btn:hover { opacity: 0.88; }
+    .checkin-btn:disabled { background: #999; cursor: default; }
+
+    .checkin-done {
+      text-align: center;
+      padding: 14px;
+      background: #EBF7F1;
+      border-radius: 10px;
+      border: 1.5px solid #5CCC8A;
+    }
+
+    .checkin-done p { color: var(--green); font-weight: 600; font-size: 0.95rem; }
+    .checkin-done small { color: var(--gray); font-size: 0.78rem; }
+
+    /* --- ERROR --- */
+    .error-card {
+      background: white;
+      border-radius: 12px;
+      border: 1.5px solid #E8C4C4;
+      padding: 24px;
+      text-align: center;
+      display: none;
+    }
+
+    .error-card.visible { display: block; }
+    .error-card h3 { color: var(--red); margin-bottom: 6px; }
+    .error-card p { color: var(--gray); font-size: 0.88rem; }
+
+    /* --- LOADING --- */
+    .loading {
+      text-align: center;
+      padding: 32px;
+      color: var(--gray);
+      display: none;
+    }
+
+    .loading.visible { display: block; }
+
+    .spinner {
+      width: 32px; height: 32px;
+      border: 3px solid var(--border);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 12px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* --- LOG TABLE --- */
+    .log-section {
+      margin-top: 28px;
+      background: white;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .log-section h3 {
+      padding: 14px 16px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--gray);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .log-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    .log-table th { padding: 8px 12px; text-align: left; color: var(--gray); font-weight: 600; font-size: 0.72rem; }
+    .log-table td { padding: 10px 12px; border-top: 1px solid var(--border); }
+    .log-table tr:last-child td { border-bottom: none; }
+
+    .config-note {
+      background: #FFF8E8;
+      border: 1px solid #E8CC88;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      font-size: 0.82rem;
+      color: #6B5500;
+      line-height: 1.5;
+    }
+
+    .config-note strong { color: #4A3800; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>💍 Boda Kary &amp; Fer</h1>
+  <p>Control de accesos</p>
+</header>
+
+<div class="container">
+
+  <!-- Config warning shown when SHEET_ID is placeholder -->
+  <div class="config-note" id="configNote" style="display:none">
+    ⚙️ <strong>Pendiente de configurar:</strong> Abre este archivo y reemplaza <code>TU_SHEET_ID_AQUI</code> con el ID de tu Google Sheet. Sigue las instrucciones del archivo <strong>INSTRUCCIONES.md</strong>.
+  </div>
+
+  <div class="search-section">
+    <label>Buscar invitado</label>
+    <div class="search-row">
+      <input type="text" id="searchInput" placeholder="Nombre o grupo…" autocomplete="off" />
+      <button onclick="buscarInvitado()">Buscar</button>
+    </div>
+  </div>
+
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <p>Consultando lista…</p>
+  </div>
+
+  <div class="error-card" id="errorCard">
+    <h3>⚠️ Invitado no encontrado</h3>
+    <p id="errorMsg">Verifica el nombre o el código QR.</p>
+  </div>
+
+  <div class="guest-card" id="guestCard">
+    <div class="card-header">
+      <div class="avatar" id="avatarText">KF</div>
+      <div class="card-header-info">
+        <h2 id="guestName">—</h2>
+        <span id="guestGroup">Grupo —</span>
+      </div>
+      <div class="status-badge" id="statusBadge">—</div>
+    </div>
+
+    <div class="card-body">
+      <div class="info-row">
+        <div class="info-icon">🪑</div>
+        <div>
+          <div class="info-label">Mesa</div>
+          <div class="info-value" id="mesaVal">—</div>
+        </div>
+      </div>
+
+      <div class="info-row">
+        <div class="info-icon">🏨</div>
+        <div>
+          <div class="info-label">Habitación</div>
+          <div class="info-value" id="habVal">—</div>
+        </div>
+      </div>
+
+      <div class="info-row">
+        <div class="info-icon">🎟️</div>
+        <div>
+          <div class="info-label">Boletos del grupo</div>
+          <div class="tickets-value" id="boletosVal">—</div>
+        </div>
+      </div>
+
+      <div class="info-row" id="restriccionRow" style="display:none">
+        <div class="info-icon">🥗</div>
+        <div>
+          <div class="info-label">Restricción alimentaria</div>
+          <div class="info-value" id="restriccionVal">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="checkin-section">
+      <button class="checkin-btn" id="checkinBtn" onclick="registrarCheckin()">
+        ✅ Registrar llegada
+      </button>
+      <div class="checkin-done" id="checkinDone" style="display:none">
+        <p>✅ Check-in registrado</p>
+        <small id="checkinTime"></small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Log de check-ins de esta sesión -->
+  <div class="log-section" id="logSection" style="display:none">
+    <h3>📋 Llegadas registradas esta sesión</h3>
+    <table class="log-table">
+      <thead>
+        <tr>
+          <th>Invitado</th>
+          <th>Mesa</th>
+          <th>Hora</th>
+        </tr>
+      </thead>
+      <tbody id="logBody"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+  // ============================================================
+  //  CONFIGURACIÓN — cambia este valor con tu Sheet ID
+  // ============================================================
+  const SHEET_ID = 'TU_SHEET_ID_AQUI';
+  const SHEET_NAME = 'Invitados'; // nombre de la hoja en Google Sheets
+  // ============================================================
+
+  let todosLosInvitados = [];
+  let invitadoActual = null;
+  const checkinLog = [];
+
+  // Detectar si la config está vacía
+  if (SHEET_ID === 'TU_SHEET_ID_AQUI') {
+    document.getElementById('configNote').style.display = 'block';
+  }
+
+  // Leer parámetro ?q= de la URL (viene del QR)
+  window.addEventListener('load', () => {
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get('q');
+    if (q) {
+      document.getElementById('searchInput').value = decodeURIComponent(q);
+      cargarDatos().then(() => buscarInvitado());
+    } else {
+      cargarDatos();
+    }
+  });
+
+  // Presionar Enter en el input
+  document.getElementById('searchInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') buscarInvitado();
+  });
+
+  async function cargarDatos() {
+    if (SHEET_ID === 'TU_SHEET_ID_AQUI') return;
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+    try {
+      const res = await fetch(url);
+      const text = await res.text();
+      // Google envuelve la respuesta en /*O_o*/\ngoogle.visualization.Query.setResponse(...)
+      const json = JSON.parse(text.substring(47).slice(0, -2));
+      const rows = json.table.rows;
+      const cols = json.table.cols.map(c => c.label);
+
+      todosLosInvitados = rows.map(r => {
+        const obj = {};
+        cols.forEach((col, i) => {
+          obj[col] = r.c[i] ? (r.c[i].v !== null ? String(r.c[i].v) : '') : '';
+        });
+        return obj;
+      }).filter(r => r['Nombre Invitado']);
+    } catch(e) {
+      console.error('Error cargando datos:', e);
+    }
+  }
+
+  function buscarInvitado() {
+    const query = document.getElementById('searchInput').value.trim().toLowerCase();
+    if (!query) return;
+
+    ocultarTodo();
+
+    if (SHEET_ID === 'TU_SHEET_ID_AQUI') {
+      mostrarError('Configura el SHEET_ID primero. Revisa el archivo INSTRUCCIONES.md');
+      return;
+    }
+
+    if (todosLosInvitados.length === 0) {
+      document.getElementById('loading').classList.add('visible');
+      cargarDatos().then(() => {
+        document.getElementById('loading').classList.remove('visible');
+        buscarInterna(query);
+      });
+    } else {
+      buscarInterna(query);
+    }
+  }
+
+  function buscarInterna(query) {
+    // Busca por nombre, nombre corto o grupo
+    const encontrado = todosLosInvitados.find(inv =>
+      (inv['Nombre Invitado'] || '').toLowerCase().includes(query) ||
+      (inv['Nombre Corto'] || '').toLowerCase().includes(query) ||
+      (inv['Grupo'] || '').toLowerCase() === query
+    );
+
+    if (!encontrado) {
+      mostrarError(`No se encontró "${query}" en la lista.`);
+      return;
+    }
+
+    // Si encontró un miembro del grupo, mostrar datos del grupo completo
+    const grupoId = encontrado['Grupo'];
+    const miembrosGrupo = todosLosInvitados.filter(i => i['Grupo'] === grupoId);
+    const representante = miembrosGrupo.find(i => i['Boletos'] && i['Boletos'] !== '') || miembrosGrupo[0];
+
+    invitadoActual = representante;
+    mostrarTarjeta(representante, miembrosGrupo);
+  }
+
+  function mostrarTarjeta(inv, grupo) {
+    // Avatar
+    const nombre = inv['Nombre Corto'] || inv['Nombre Invitado'] || '?';
+    document.getElementById('avatarText').textContent = nombre.substring(0, 2).toUpperCase();
+    document.getElementById('guestName').textContent = nombre;
+    document.getElementById('guestGroup').textContent = `Grupo ${inv['Grupo']} · ${grupo.length} persona${grupo.length > 1 ? 's' : ''}`;
+
+    // Status badge
+    const resp = (inv['Respuesta'] || 'PENDIENTE').replace(/\s/g, '-');
+    const badge = document.getElementById('statusBadge');
+    badge.textContent = inv['Respuesta'] || 'PENDIENTE';
+    badge.className = `status-badge status-${resp}`;
+
+    // Datos
+    const mesa = inv['Número de Mesa'] || 'Por asignar';
+    document.getElementById('mesaVal').textContent = mesa === 'Pendiente de Asignar' ? '⏳ Por asignar' : mesa;
+    document.getElementById('habVal').textContent = inv['Habitación'] || 'Sin habitación reservada';
+    document.getElementById('boletosVal').textContent = inv['Boletos'] || grupo.length;
+
+    // Restricción alimentaria
+    const restriccion = inv['Restricción  Alimentaria'] || inv['Restricción Alimentaria'] || '';
+    if (restriccion) {
+      document.getElementById('restriccionVal').textContent = restriccion;
+      document.getElementById('restriccionRow').style.display = 'flex';
+    }
+
+    // Check-in
+    const yaHizoCheckin = checkinLog.find(l => l.grupo === inv['Grupo']);
+    if (yaHizoCheckin) {
+      mostrarCheckinHecho(yaHizoCheckin.hora);
+    } else {
+      document.getElementById('checkinBtn').style.display = 'flex';
+      document.getElementById('checkinDone').style.display = 'none';
+    }
+
+    document.getElementById('guestCard').classList.add('visible');
+  }
+
+  function registrarCheckin() {
+    const ahora = new Date();
+    const hora = ahora.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+    const nombre = invitadoActual['Nombre Corto'] || invitadoActual['Nombre Invitado'];
+    const mesa = invitadoActual['Número de Mesa'] || 'Por asignar';
+
+    checkinLog.unshift({ nombre, mesa, hora, grupo: invitadoActual['Grupo'] });
+    mostrarCheckinHecho(hora);
+    actualizarLog();
+
+    // Registrar en Google Sheets (Log sheet)
+    registrarEnSheet(nombre, mesa, hora, ahora.toLocaleDateString('es-MX'));
+  }
+
+  function mostrarCheckinHecho(hora) {
+    document.getElementById('checkinBtn').style.display = 'none';
+    document.getElementById('checkinDone').style.display = 'block';
+    document.getElementById('checkinTime').textContent = `Hora de llegada: ${hora}`;
+  }
+
+  function actualizarLog() {
+    const section = document.getElementById('logSection');
+    const tbody = document.getElementById('logBody');
+    section.style.display = 'block';
+    tbody.innerHTML = checkinLog.map(l => `
+      <tr>
+        <td><strong>${l.nombre}</strong></td>
+        <td>${l.mesa}</td>
+        <td>${l.hora}</td>
+      </tr>
+    `).join('');
+  }
+
+  async function registrarEnSheet(nombre, mesa, hora, fecha) {
+    // Google Apps Script Web App endpoint para escribir el log
+    const SCRIPT_URL = localStorage.getItem('SCRIPT_URL') || '';
+    if (!SCRIPT_URL) return; // Si no hay script configurado, solo log local
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre, mesa, hora, fecha })
+      });
+    } catch(e) { /* silencioso */ }
+  }
+
+  function ocultarTodo() {
+    document.getElementById('guestCard').classList.remove('visible');
+    document.getElementById('errorCard').classList.remove('visible');
+    document.getElementById('loading').classList.remove('visible');
+    document.getElementById('restriccionRow').style.display = 'none';
+  }
+
+  function mostrarError(msg) {
+    document.getElementById('errorMsg').textContent = msg;
+    document.getElementById('errorCard').classList.add('visible');
+  }
+</script>
+</body>
+</html>
