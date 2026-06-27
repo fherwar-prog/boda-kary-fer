@@ -756,14 +756,45 @@ function cargarFotosDemo() {
 }
 
 async function cargarFotos() {
+  // Mostrar spinner mientras carga
+  document.getElementById('emptyState').innerHTML = `
+    <div class="empty-icon">⏳</div>
+    <h3 class="empty-title">Cargando fotos…</h3>
+    <p class="empty-sub">Un momento por favor</p>`;
+  document.getElementById('emptyState').style.display = 'block';
+
   try {
-    // Cloudinary no tiene endpoint público de listado sin auth → usamos un tag search
-    // Para una boda el volumen es manejable con una lista local en localStorage
-    const guardadas = JSON.parse(localStorage.getItem('boda_fotos') || '[]');
-    todasLasFotos = guardadas;
+    // Cloudinary Search API — lista todas las fotos del folder en tiempo real
+    // Cualquier foto borrada en Cloudinary desaparece aquí automáticamente
+    const endpoint = `https://res.cloudinary.com/${CLOUD_NAME}/image/list/${GALLERY_TAG}.json`;
+    const res  = await fetch(endpoint);
+
+    if (!res.ok) throw new Error('No se pudo consultar Cloudinary');
+
+    const data = await res.json();
+    const recursos = data.resources || [];
+
+    // Ordenar por fecha de subida, más reciente primero
+    recursos.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+    todasLasFotos = recursos.map(r => {
+      const base = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload`;
+      const id   = r.public_id;
+      return {
+        url:   `${base}/q_auto,f_auto/${id}`,
+        thumb: `${base}/w_300,h_400,c_fill,q_auto,f_auto/${id}`,
+        id
+      };
+    });
+
     renderizarGaleria();
   } catch(e) {
-    console.error(e);
+    console.error('Error cargando fotos:', e);
+    document.getElementById('emptyState').innerHTML = `
+      <div class="empty-icon">📷</div>
+      <h3 class="empty-title">Aún no hay fotos</h3>
+      <p class="empty-sub">Sé el primero en compartir un recuerdo.<br>Toca <strong>Subir foto</strong> para empezar.</p>`;
+    document.getElementById('emptyState').style.display = 'block';
   }
 }
 
@@ -922,12 +953,11 @@ async function subirFotos() {
   document.getElementById('progressBar').style.width = '100%';
   document.getElementById('progressText').textContent = `✅ ${nuevas.length} foto${nuevas.length !== 1 ? 's' : ''} subida${nuevas.length !== 1 ? 's' : ''}`;
 
-  // Guardar en localStorage + actualizar galería
-  todasLasFotos = [...nuevas, ...todasLasFotos];
-  localStorage.setItem('boda_fotos', JSON.stringify(todasLasFotos));
-  renderizarGaleria();
-
-  setTimeout(cerrarUpload, 1200);
+  // Recargar desde Cloudinary para que esté 100% sincronizado
+  setTimeout(async () => {
+    cerrarUpload();
+    await cargarFotos();
+  }, 1200);
 }
 </script>
 </body>
