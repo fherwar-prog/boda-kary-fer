@@ -226,28 +226,24 @@
     .reel-track-wrap {
       overflow: hidden;
       position: relative;
+      /* Fade fijo en los bordes usando mask — no se mueve con las fotos */
+      -webkit-mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        black 80px,
+        black calc(100% - 80px),
+        transparent 100%
+      );
+      mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        black 80px,
+        black calc(100% - 80px),
+        transparent 100%
+      );
     }
 
-    /* Fade edges */
-    .reel-track-wrap::before,
-    .reel-track-wrap::after {
-      content: '';
-      position: absolute;
-      top: 0; bottom: 0;
-      width: 60px;
-      z-index: 2;
-      pointer-events: none;
-    }
-
-    .reel-track-wrap::before {
-      left: 0;
-      background: linear-gradient(90deg, var(--dark), transparent);
-    }
-
-    .reel-track-wrap::after {
-      right: 0;
-      background: linear-gradient(-90deg, var(--dark), transparent);
-    }
+    /* Eliminamos los pseudo-elementos que causaban el cuadro oscuro */
 
     .reel-track {
       display: flex;
