@@ -249,26 +249,12 @@
       display: flex;
       gap: 10px;
       padding: 0 24px 12px;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
+      overflow: hidden;
       scrollbar-width: none;
-      animation: none;
+      /* Sin animación CSS — el scroll lo maneja JavaScript */
     }
 
     .reel-track::-webkit-scrollbar { display: none; }
-
-    /* Animación auto-scroll cuando hay suficientes fotos */
-    .reel-track.auto-scroll {
-      animation: scrollReel 30s linear infinite;
-    }
-
-    @keyframes scrollReel {
-      0%   { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-
-    .reel-track:hover { animation-play-state: paused; }
 
     .reel-item {
       flex-shrink: 0;
@@ -833,12 +819,42 @@ function renderizarGaleria() {
     grid.appendChild(gi);
   });
 
-  // Auto-scroll si hay suficientes fotos
-  if (todasLasFotos.length >= 5) {
-    // Duplicar para loop infinito
-    const items = [...reel.children];
-    items.forEach(item => reel.appendChild(item.cloneNode(true)));
-    reel.classList.add('auto-scroll');
+  // Carrete con loop infinito en JavaScript (sin saltos ni cuadros negros)
+  if (todasLasFotos.length >= 3) {
+    // Triplicar los items para tener margen de loop en ambos lados
+    const originales = [...reel.children];
+    originales.forEach(item => reel.appendChild(item.cloneNode(true)));
+    originales.forEach(item => reel.appendChild(item.cloneNode(true)));
+
+    // Arrancar desde el segundo bloque (centro) para que haya contenido a la izquierda
+    const anchoBloque = reel.scrollWidth / 3;
+    reel.scrollLeft = anchoBloque;
+
+    let pausado = false;
+    let rafId = null;
+    const velocidad = 0.6; // px por frame — ajusta para más rápido/lento
+
+    function scrollStep() {
+      if (!pausado) {
+        reel.scrollLeft += velocidad;
+
+        // Cuando llega al final del segundo bloque, salta silenciosamente al inicio del segundo
+        if (reel.scrollLeft >= anchoBloque * 2) {
+          reel.scrollLeft -= anchoBloque;
+        }
+      }
+      rafId = requestAnimationFrame(scrollStep);
+    }
+
+    rafId = requestAnimationFrame(scrollStep);
+
+    // Pausar al tocar/hover
+    reel.addEventListener('mouseenter', () => { pausado = true; });
+    reel.addEventListener('mouseleave', () => { pausado = false; });
+    reel.addEventListener('touchstart',  () => { pausado = true; },  { passive: true });
+    reel.addEventListener('touchend',    () => {
+      setTimeout(() => { pausado = false; }, 2000); // reanudar 2s después de soltar
+    });
   }
 }
 
